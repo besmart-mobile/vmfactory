@@ -45,9 +45,11 @@ public class VmFactoryProcessor  extends AbstractProcessor {
 
     private static final String METHOD_PREFIX_GET = "get";
     private static final String PARAM_NAME_FRAGMENT = "fragment";
+    private static final String PARAM_NAME_FRAGMENT_ACTIVITY = "fragmentActivity";
     private static final String CLASS_NAME_VM_PROVIDER = "VmProvider";
     private static final String FACTORY_CREATE_METHOD_NAME = "create";
     private static final ClassName supportFragmentClass = ClassName.get("android.support.v4.app", "Fragment");
+    private static final ClassName supportFragmentActivityClass = ClassName.get("android.support.v4.app", "FragmentActivity");
     private static final ClassName viewModelClass = ClassName.get("android.arch.lifecycle", "ViewModel");
     private static final ClassName viewModelProvidersClass = ClassName.get("android.arch.lifecycle", "ViewModelProviders");
     private static final ClassName viewModelProviderNewInstanceFactoryClass = ClassName.get("android.arch.lifecycle", "ViewModelProvider", "NewInstanceFactory");
@@ -244,6 +246,23 @@ public class VmFactoryProcessor  extends AbstractProcessor {
         }
 
 
+        MethodSpec fragmentMethodSpec = getGetMethodSpecForFragment(element, viewModelTypeName, parameterSpecs, parametersCallBlock, factoryClassName);
+        getMethodSpecs.add(fragmentMethodSpec);
+
+        MethodSpec activityMethodSpec = getGetMethodSpecForActivity(element, viewModelTypeName, parameterSpecs, parametersCallBlock, factoryClassName);
+        getMethodSpecs.add(activityMethodSpec);
+
+
+        processingEnv.getMessager().printMessage(Diagnostic.Kind.WARNING, "SUCCESS");
+
+        return true;
+    }
+
+    private MethodSpec getGetMethodSpecForFragment(TypeElement element,
+                                                   ClassName viewModelTypeName,
+                                                   List<ParameterSpec> parameterSpecs,
+                                                   String parametersCallBlock,
+                                                   ClassName factoryClassName) {
         final MethodSpec.Builder getMethodSpecBuilder = MethodSpec
                 .methodBuilder(METHOD_PREFIX_GET + element.getSimpleName())
                 .addModifiers(Modifier.PUBLIC, Modifier.STATIC)
@@ -255,17 +274,32 @@ public class VmFactoryProcessor  extends AbstractProcessor {
         }
 
 
-
-        MethodSpec methodSpec = getMethodSpecBuilder
+        return getMethodSpecBuilder
                 .addCode("$T factory = new $T($L);\n", factoryClassName, factoryClassName, parametersCallBlock)
                 .addCode("return $T.of($N, factory).get($T.class);\n", viewModelProvidersClass, PARAM_NAME_FRAGMENT, viewModelTypeName)
                 .build();
+    }
 
-        getMethodSpecs.add(methodSpec);
+    private MethodSpec getGetMethodSpecForActivity(TypeElement element,
+                                                   ClassName viewModelTypeName,
+                                                   List<ParameterSpec> parameterSpecs,
+                                                   String parametersCallBlock,
+                                                   ClassName factoryClassName) {
+        final MethodSpec.Builder getMethodSpecBuilder = MethodSpec
+                .methodBuilder(METHOD_PREFIX_GET + element.getSimpleName())
+                .addModifiers(Modifier.PUBLIC, Modifier.STATIC)
+                .returns(viewModelTypeName)
+                .addParameter(supportFragmentActivityClass, PARAM_NAME_FRAGMENT_ACTIVITY);
 
-        processingEnv.getMessager().printMessage(Diagnostic.Kind.WARNING, "SUCCESS");
+        for (ParameterSpec parameterSpec : parameterSpecs) {
+            getMethodSpecBuilder.addParameter(parameterSpec);
+        }
 
-        return true;
+
+        return getMethodSpecBuilder
+                .addCode("$T factory = new $T($L);\n", factoryClassName, factoryClassName, parametersCallBlock)
+                .addCode("return $T.of($N, factory).get($T.class);\n", viewModelProvidersClass, PARAM_NAME_FRAGMENT_ACTIVITY, viewModelTypeName)
+                .build();
     }
 
     private String getParametersCallBlock(ArrayList<ParameterSpec> parameterSpecs) {
