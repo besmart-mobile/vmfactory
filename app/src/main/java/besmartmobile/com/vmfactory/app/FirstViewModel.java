@@ -1,9 +1,8 @@
 package besmartmobile.com.vmfactory.app;
 
-import android.arch.lifecycle.MutableLiveData;
-import android.arch.lifecycle.ViewModel;
-
 import com.besmartmobile.vmfactory.annotations.VmFactory;
+
+import androidx.lifecycle.ViewModel;
 
 @VmFactory
 public class FirstViewModel extends ViewModel {

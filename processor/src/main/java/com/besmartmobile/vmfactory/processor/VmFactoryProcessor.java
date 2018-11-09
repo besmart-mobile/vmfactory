@@ -48,11 +48,11 @@ public class VmFactoryProcessor  extends AbstractProcessor {
     private static final String PARAM_NAME_FRAGMENT_ACTIVITY = "fragmentActivity";
     private static final String CLASS_NAME_VM_PROVIDER = "VmProvider";
     private static final String FACTORY_CREATE_METHOD_NAME = "create";
-    private static final ClassName supportFragmentClass = ClassName.get("android.support.v4.app", "Fragment");
-    private static final ClassName supportFragmentActivityClass = ClassName.get("android.support.v4.app", "FragmentActivity");
-    private static final ClassName viewModelClass = ClassName.get("android.arch.lifecycle", "ViewModel");
-    private static final ClassName viewModelProvidersClass = ClassName.get("android.arch.lifecycle", "ViewModelProviders");
-    private static final ClassName viewModelProviderNewInstanceFactoryClass = ClassName.get("android.arch.lifecycle", "ViewModelProvider", "NewInstanceFactory");
+    private static final ClassName androidxFragmentClass = ClassName.get("androidx.fragment.app", "Fragment");
+    private static final ClassName androidxFragmentActivityClass = ClassName.get("androidx.fragment.app", "FragmentActivity");
+    private static final ClassName viewModelClass = ClassName.get("androidx.lifecycle", "ViewModel");
+    private static final ClassName viewModelProvidersClass = ClassName.get("androidx.lifecycle", "ViewModelProviders");
+    private static final ClassName viewModelProviderNewInstanceFactoryClass = ClassName.get("androidx.lifecycle", "ViewModelProvider", "NewInstanceFactory");
     private final List<MethodSpec> getMethodSpecs = new ArrayList<>();
     private String vmProviderPackage;
     private int round = -1;
@@ -267,7 +267,7 @@ public class VmFactoryProcessor  extends AbstractProcessor {
                 .methodBuilder(METHOD_PREFIX_GET + element.getSimpleName())
                 .addModifiers(Modifier.PUBLIC, Modifier.STATIC)
                 .returns(viewModelTypeName)
-                .addParameter(supportFragmentClass, PARAM_NAME_FRAGMENT);
+                .addParameter(androidxFragmentClass, PARAM_NAME_FRAGMENT);
 
         for (ParameterSpec parameterSpec : parameterSpecs) {
             getMethodSpecBuilder.addParameter(parameterSpec);
@@ -289,7 +289,7 @@ public class VmFactoryProcessor  extends AbstractProcessor {
                 .methodBuilder(METHOD_PREFIX_GET + element.getSimpleName())
                 .addModifiers(Modifier.PUBLIC, Modifier.STATIC)
                 .returns(viewModelTypeName)
-                .addParameter(supportFragmentActivityClass, PARAM_NAME_FRAGMENT_ACTIVITY);
+                .addParameter(androidxFragmentActivityClass, PARAM_NAME_FRAGMENT_ACTIVITY);
 
         for (ParameterSpec parameterSpec : parameterSpecs) {
             getMethodSpecBuilder.addParameter(parameterSpec);

@@ -1,12 +1,12 @@
 apply plugin: 'com.android.application'
 
 android {
-    compileSdkVersion 26
-    buildToolsVersion "25.0.2"
+    compileSdkVersion 28
+    buildToolsVersion "28.0.3"
     defaultConfig {
         applicationId "besmartmobile.com.vmfactory"
         minSdkVersion 19
-        targetSdkVersion 26
+        targetSdkVersion 28
         versionCode 1
         versionName "1.0"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
@@ -24,12 +24,11 @@ dependencies {
     androidTestCompile('com.android.support.test.espresso:espresso-core:2.2.2', {
         exclude group: 'com.android.support', module: 'support-annotations'
     })
-    compile 'com.android.support:appcompat-v7:26.+'
-    compile 'com.android.support.constraint:constraint-layout:1.0.2'
+    compile 'androidx.appcompat:appcompat:1.0.2'
 
-    compile 'android.arch.lifecycle:runtime:1.0.0-alpha5'
-    compile 'android.arch.lifecycle:extensions:1.0.0-alpha5'
-    annotationProcessor "android.arch.lifecycle:compiler:1.0.0-alpha5"
+    compile 'androidx.lifecycle:lifecycle-runtime:2.0.0'
+    compile 'androidx.lifecycle:lifecycle-extensions:2.0.0'
+    annotationProcessor "androidx.lifecycle:lifecycle-compiler:2.0.0"
 
     compile project(':annotations')
     annotationProcessor project(':processor')
